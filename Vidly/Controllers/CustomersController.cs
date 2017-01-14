@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,20 +10,29 @@ namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
+        private ApplicationDbContext _context;
+
+        public CustomersController()
+        {
+            _context = new ApplicationDbContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         // GET: Customers
         public ActionResult Index()
         {
-            return View(customers.ToList());
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            return View(customers);
         }
 
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (!id.HasValue)
-            {
-                return HttpNotFound();
-            }
 
-            var customer = customers.Where(c => c.Id == id.Value).SingleOrDefault();
+            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
 
             if (customer == null)
             {
@@ -33,10 +43,10 @@ namespace Vidly.Controllers
         }
 
 
-        IList<Customer> customers = new List<Customer>
-        {
-            new Customer { Id = 1, Name = "John Doe" },
-            new Customer { Id = 2, Name = "Marry Willians" }
-        };
+        //IList<Customer> customers = new List<Customer>
+        //{
+        //    new Customer { Id = 1, Name = "John Doe" },
+        //    new Customer { Id = 2, Name = "Marry Willians" }
+        //};
     }
 }
