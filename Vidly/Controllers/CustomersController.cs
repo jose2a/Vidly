@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Vidly.Models;
+using Vidly.ViewModels;
 
 namespace Vidly.Controllers
 {
@@ -29,10 +30,14 @@ namespace Vidly.Controllers
             return View(customers);
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
 
-            var customer = _context.Customers.Where(c => c.Id == id).SingleOrDefault();
+            var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id.Value);
 
             if (customer == null)
             {
@@ -42,11 +47,87 @@ namespace Vidly.Controllers
             return View(customer);
         }
 
+        public ActionResult New()
+        {
+            var membershipTypes = _context.MembershipTypes.ToList();
 
-        //IList<Customer> customers = new List<Customer>
-        //{
-        //    new Customer { Id = 1, Name = "John Doe" },
-        //    new Customer { Id = 2, Name = "Marry Willians" }
-        //};
+            var viewModel = new CustomerFormViewModel
+            {
+                MembershipTypes = membershipTypes,
+                Customer = new Customer()
+            };
+
+            return View("CustomerForm", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Customer customer)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("CustomerForm", new CustomerFormViewModel
+                    {
+                        Customer = customer,
+                        MembershipTypes = _context.MembershipTypes.ToList()
+                    });
+                }
+                          
+                if (customer.Id == 0)
+                {
+                    _context.Customers.Add(customer);
+                }
+                else
+                {
+                    var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+
+                    // We could use AutoMapper to map properties between objects
+                    // Mapper.Map(customer, customerInDb);
+
+                    customerInDb.Name = customer.Name;
+                    customerInDb.BirthDate = customer.BirthDate;
+                    customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                    customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
+                }
+
+                _context.SaveChanges();
+
+                return RedirectToAction("Index", "Customers");
+                
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index");
+            }
+
+            //var membershipTypes = _context.MembershipTypes.ToList();
+
+            //var viewModel = new CustomerFormViewModel
+            //{
+            //    MembershipTypes = membershipTypes,
+            //    Customer = model.Customer
+            //};
+
+            //return View("CustomerForm", viewModel);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new CustomerFormViewModel
+            {
+                MembershipTypes = _context.MembershipTypes.ToList(),
+                Customer = customer
+            };
+
+            return View("CustomerForm", viewModel);
+        }
     }
 }
