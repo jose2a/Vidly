@@ -10,14 +10,18 @@ namespace Vidly.Models
     {
         public int Id { get; set; }
 
+        [Required (ErrorMessage = "Name of the movie is required.")]
         public string Name { get; set; }
 
+        [Required]
         [Display(Name = "Release Date")]
         public DateTime? ReleasedDate { get; set; }
 
         public DateTime? DateAdded { get; set; }
 
         [Display(Name = "Number in Stock")]
+        [Required]
+        [Range(minimum: 1, maximum:20, ErrorMessage = "Number in stock should be between {1} and {2}.")]
         public int NumberInStock { get; set; }
 
 

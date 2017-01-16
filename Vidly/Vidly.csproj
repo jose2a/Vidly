@@ -235,6 +235,10 @@
     <Compile Include="Migrations\201701140311443_AddGenreAndMembershipTypeToDbContext.Designer.cs">
       <DependentUpon>201701140311443_AddGenreAndMembershipTypeToDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701162122069_AddedAnnotationsToMovieTable.cs" />
+    <Compile Include="Migrations\201701162122069_AddedAnnotationsToMovieTable.Designer.cs">
+      <DependentUpon>201701162122069_AddedAnnotationsToMovieTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
@@ -376,6 +380,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701140311443_AddGenreAndMembershipTypeToDbContext.resx">
       <DependentUpon>201701140311443_AddGenreAndMembershipTypeToDbContext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701162122069_AddedAnnotationsToMovieTable.resx">
+      <DependentUpon>201701162122069_AddedAnnotationsToMovieTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
