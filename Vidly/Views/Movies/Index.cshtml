@@ -10,34 +10,38 @@
 @Html.ActionLink("New Movie", "New", "Movies", new { }, new { @class = "btn btn-primary" })
 </div>
 
-@if (Model.Count() == 0)
+@if (!Model.Any())
 {
-    <text>There are no movies in our inventory yet.</text>
+    <p>There are no movies in our inventory yet.</p>
 }
 else
 {
     <table class="table table-striped table-bordered table-hover">
-        <tr>
-            <th>
-                Movie
-            </th>
-            <th>
-                Genre
-            </th>
-        </tr>
-
-        @foreach (var movie in Model)
-        {
+        <thead>
             <tr>
-                <td>
-                    @Html.ActionLink(movie.Name, "Edit", new { movie.Id })
-                </td>
-                <td>
-                    @movie.Genre.Name
-                </td>
+                <th>
+                    Movie
+                </th>
+                <th>
+                    Genre
+                </th>
             </tr>
-        }
+        </thead>
+        <tbody>
 
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(movie.Name, "Edit", new { movie.Id })
+                    </td>
+                    <td>
+                        @movie.Genre.Name
+                    </td>
+                </tr>
+            }
+
+        </tbody>
     </table>
 
 }
