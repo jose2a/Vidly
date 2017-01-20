@@ -31,5 +31,15 @@ namespace Vidly.Models
         [Required]
         public int GenreId { get; set; }
 
+        [Required]
+        public int NumberAvailable { get; set; }
+
+        public ICollection<Rental> Rentals { get; set; }
+
+        public Movie()
+        {
+            Rentals = new List<Rental>();
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Vidly.Models
@@ -21,5 +22,12 @@ namespace Vidly.Models
 
         [Display(Name = "Membership Type")]
         public byte MembershipTypeId { get; set; }
+
+        public ICollection<Rental> Rentals { get; set; }
+
+        public Customer()
+        {
+            Rentals = new List<Rental>();
+        }
     }
 }
